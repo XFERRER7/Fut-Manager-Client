@@ -5,7 +5,8 @@ interface UserState {
   email: string;
   password: string;
   token: string;
-  setUserData: (email: string, password: string, token: string) => void;
+  idUser: string;
+  setUserData: (email: string, password: string, token: string, idUser: string) => void;
 }
 
 const useUserStore = create<UserState>()(
@@ -14,8 +15,9 @@ const useUserStore = create<UserState>()(
       email: '',
       password: '',
       token: '',
-      setUserData: (email: string, password: string, token: string) =>
-        set({ email, password, token }),
+      idUser: '',
+      setUserData: (email: string, password: string, token: string, idUser: string) =>
+        set({ email, password, token, idUser }),
     }),
     {
       name: 'user-storage',

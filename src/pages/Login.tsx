@@ -29,12 +29,12 @@ export const Login = () => {
 
       const res = await api.signIn(user)
 
-      console.log(res.token)
+      console.log(res)
 
       if (res.token) {
         nav('/home')
         setError('')
-        setUserData(user.email, user.password, res.token)
+        setUserData(user.email, user.password, res.token, res.idUser)
       }
 
     }
