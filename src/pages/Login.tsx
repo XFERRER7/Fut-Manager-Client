@@ -29,17 +29,24 @@ export const Login = () => {
 
       const res = await api.signIn(user)
 
-      console.log(res)
-
       if (res.token) {
-        nav('/home')
+
         setError('')
         setUserData(user.email, user.password, res.token, res.idUser)
+
+        const resTeam = await api.getDataUser(res.idUser)
+
+        if(resTeam.teams) {
+          nav('/dashboard')
+        }else {
+          nav('/home')
+        }
+        
       }
 
     }
     catch (err: any) {
-      console.log(err.response.data)
+      console.log(err)
       setError('E-mail ou senha incorretos')
     }
   

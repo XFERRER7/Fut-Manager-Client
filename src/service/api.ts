@@ -124,6 +124,18 @@ export const useApi = () => {
       catch (error: any) {
         console.log(error.response.data)
       }
+    },
+    getPlayerByTeamId: async (teamId: string | undefined) => {
+        
+      try {
+        const response = await api.get(`/get-players/${teamId}`, optionsGet)
+        const data = await response.data
+        return data
+      }
+      catch (error: any) {
+        console.log(error.response.data)
+      }
+  
     }
 
   }
