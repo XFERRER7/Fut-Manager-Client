@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
+import { PlayerModal } from '../components/PlayerModal'
 import { useApi } from '../service/api'
 import useUserStore from '../stores/AuthStore'
+import { IPlayer } from '../types/types'
 
 interface IDataUser {
   id: number
@@ -31,12 +33,12 @@ export interface ITeam {
   teamId: string
 }
 
-
 export const Dashboard = () => {
 
   const [dataUser, setDataUser] = useState<IDataUser | null>(null)
   const [dataTeam, setDataTeam] = useState<ITeam[] | null>(null)
-
+  const [dataPlayer, setDataPlayer] = useState<IPlayer | null>(null)
+  const [modalIsOpen, setModalIsOpen] = useState(false)
 
   const api = useApi()
   const { idUser } = useUserStore()
@@ -52,10 +54,23 @@ export const Dashboard = () => {
 
     const res = await api.getPlayerByTeamId(dataUser?.teams?.id)
 
-    console.log(dataUser?.teams?.id)
-
     return res
 
+  }
+
+  const handleClickPlayer = (playerId: string) => {
+
+    setModalIsOpen(!modalIsOpen)
+
+    if (modalIsOpen) return
+
+    api.getPlayerById(playerId)
+      .then(res => {
+        setDataPlayer(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 
   useEffect(() => {
@@ -76,8 +91,9 @@ export const Dashboard = () => {
 
     getDataTeam()
       .then(res => {
+
+        if (res.length === 0) return setDataTeam(null)
         setDataTeam(res)
-        console.log(res)
       })
       .catch(err => {
         console.log(err)
@@ -95,7 +111,13 @@ export const Dashboard = () => {
       <div className='flex flex-col items-center h-96 w-3/4 gap-1'>
         {
           dataTeam !== null ? dataTeam.map((item: ITeam) =>
-            <div className='w-3/4 bg-green-100 h-20 text-white flex items-center justify-around'>
+            <div
+              key={item.id}
+              className='w-3/4 bg-green-100 h-20 text-white flex items-center justify-around'
+              onClick={() => {
+                handleClickPlayer(item.id)
+              }}
+            >
               <img src={`http://localhost:3000/playerFiles/${item.avatar}`} className='w-16 h-16' alt="" />
               <span>{item.name}</span>
               <span>{item.nationality}</span>
@@ -106,7 +128,24 @@ export const Dashboard = () => {
             : <span>Sem jogadores registrados</span>
         }
       </div>
-
+      {
+        modalIsOpen && dataPlayer !== null ?
+        <PlayerModal 
+            age={dataPlayer?.age}
+            name={dataPlayer?.name}
+            birthDate={dataPlayer?.birthDate}
+            weight={dataPlayer?.weight}
+            height={dataPlayer?.height}
+            avatar={dataPlayer?.avatar}
+            isInjured={dataPlayer?.isInjured}
+            id={dataPlayer?.id}
+            nationality={dataPlayer.nationality}
+            position={dataPlayer?.position}
+            salary={dataPlayer?.salary}     
+            setModalIsOpen={setModalIsOpen}  
+      />
+        : null
+      }
     </div>
   )
 }

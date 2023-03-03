@@ -89,6 +89,19 @@ export const useApi = () => {
       return data
 
     },
+    getPlayerById: async (playerId: string) => {
+
+      try {
+        const response = await api.get(`/get-player/${playerId}`, optionsGet)
+
+        const data = await response.data
+
+        return data
+
+      } catch (error: any) {
+        return error.response.data
+      }
+    },
     getTeamById: async (teamId: string) => {
 
       const response = await api.get(`/get-team/${teamId}`, optionsGet)
@@ -126,7 +139,7 @@ export const useApi = () => {
       }
     },
     getPlayerByTeamId: async (teamId: string | undefined) => {
-        
+
       try {
         const response = await api.get(`/get-players/${teamId}`, optionsGet)
         const data = await response.data
@@ -135,7 +148,7 @@ export const useApi = () => {
       catch (error: any) {
         console.log(error.response.data)
       }
-  
+
     }
 
   }

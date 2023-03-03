@@ -9,7 +9,7 @@ export const Header = ({isLogin}: IPropsHeader) => {
   const navigate = useNavigate()
 
   return (
-    <header className="w-full h-14 flex justify-between items-center">
+    <header className="w-full bg-green-100 h-14 flex justify-between items-center">
 
       <img className="h-24 w-32" src="mainLogo.svg" alt="" />
 
