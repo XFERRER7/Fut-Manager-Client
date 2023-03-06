@@ -22,3 +22,8 @@ export interface IPlayer {
   avatar: string
   isInjured: boolean
 }
+
+export interface ISidebarItem {
+  title: string;
+  icon: any;
+}

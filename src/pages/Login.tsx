@@ -32,7 +32,7 @@ export const Login = () => {
       if (res.token) {
 
         setError('')
-        setUserData(user.email, user.password, res.token, res.idUser)
+        setUserData(user.email, user.password, res.token, res.idUser, res.name)
 
         const resTeam = await api.getDataUser(res.idUser, res.token)
 

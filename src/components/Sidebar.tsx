@@ -1,11 +1,30 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPeopleGroup } from '@fortawesome/free-solid-svg-icons'
-import { faPersonCirclePlus } from '@fortawesome/free-solid-svg-icons'
-import { faUser } from '@fortawesome/free-solid-svg-icons'
-import { faMedal } from '@fortawesome/free-solid-svg-icons'
-import { faMagnifyingGlassPlus } from '@fortawesome/free-solid-svg-icons'
+import { itemsSidebar } from "../utils/itemsSidebar"
+import { useEffect, useState } from "react"
+import { ISidebarItem } from "../types/types";
+import { ItemSidebar } from "./ItemSidebar";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons"
+import useUserStore from "../stores/AuthStore";
 
-export const Sidebar = () => {
+
+
+interface ISidebarProps {
+  itemSelected: 'Meu Time' | 'Adicionar Jogador' | 'Meu perfil' | 'Fut Premium' | 'Sobre nós';
+}
+
+export const Sidebar = ({ itemSelected }: ISidebarProps) => {
+
+  const [items, setItems] = useState<ISidebarItem[]>([])
+
+  const { name } = useUserStore()
+  const { email } = useUserStore()
+
+  useEffect(() => {
+
+    setItems(itemsSidebar)
+
+  }, [])
+
   return (
     <nav className='bg-green-900 rounded-lg h-full w-[23%] text-white font-sans flex flex-col'>
 
@@ -19,33 +38,41 @@ export const Sidebar = () => {
       <div className="flex font-Playfair w-full h-2/4 flex-col mt-10 
       items-center justify-between px-10">
 
-        <div className="w-full flex items-center gap-5 bg-[#F4FBF7] p-2 rounded text-green-900">
-          <FontAwesomeIcon icon={faPeopleGroup} color={'#22543D'} size={'lg'}/>
-          <span className="font-bold">Meu Time</span>
-        </div>
+        {
+          items.map(item => <ItemSidebar icon={item.icon} title={item.title} itemSelected={itemSelected} />)
+        }
+
+      </div>
+      <div className="flex font-Playfair w-full flex-col mt-10 
+      items-center justify-between px-10 cursor-pointer gap-2">
 
         <div className="w-full flex items-center gap-5 p-2 rounded">
-          <FontAwesomeIcon icon={faPersonCirclePlus} color={'white'} size={'lg'}/>
-          <span className="font-bold">Adicionar Jogador</span>
+          <FontAwesomeIcon icon={faSignOutAlt} color={'white'} size={'lg'} />
+          <span className="font-bold">Logout</span>
         </div>
 
-        <div className="w-full flex items-center gap-5 p-2 rounded">
-          <FontAwesomeIcon icon={faUser} color={'white'} size={'lg'}/>
-          <span className="font-bold">Meu perfil</span>
-        </div>
+        <div className="flex w-full gap-5">
 
-        <div className="w-full flex items-center gap-5 p-2 rounded">
-          <FontAwesomeIcon icon={faMedal} color={'#FDE68A'} size={'lg'}/>
-          <span className="font-bold text-yellow-300">Fut Premium</span>
-        </div>
+          <div>
+            <div className='flex flex-col items-center w-8 h-8 bg-white rounded-full justify-center text-sm'>
+              <span className='text-green-900 font-bold text-lg uppercase'>{name[0]}</span>
+            </div>
+          </div>
 
-        <div className="w-full flex items-center gap-5 p-2 rounded">
-          <FontAwesomeIcon icon={faMagnifyingGlassPlus} color={'white'} size={'lg'}/>
-          <span className="font-bold">Sobre nós</span>
+          <div className="flex flex-col text-xs">
+            <span>{name}</span>
+            <span>{email}</span>
+          </div>
+
         </div>
 
       </div>
-
     </nav>
   )
 }
+
+
+{/* <div className="w-full flex items-center gap-5 bg-[#F4FBF7] p-2 rounded text-green-900">
+  <FontAwesomeIcon icon={faPeopleGroup} color={'#22543D'} size={'lg'} />
+  <span className="font-bold">Meu Time</span>
+</div> */}
