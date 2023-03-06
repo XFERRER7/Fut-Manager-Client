@@ -34,7 +34,7 @@ export const Login = () => {
         setError('')
         setUserData(user.email, user.password, res.token, res.idUser)
 
-        const resTeam = await api.getDataUser(res.idUser)
+        const resTeam = await api.getDataUser(res.idUser, res.token)
 
         if(resTeam.teams) {
           nav('/dashboard')

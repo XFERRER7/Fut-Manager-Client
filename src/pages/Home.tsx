@@ -1,10 +1,10 @@
-import React, { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../components/Header';
 import { useApi } from '../service/api';
 import useStoreAuth from '../stores/AuthStore'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFile } from '@fortawesome/free-solid-svg-icons'
+import { Navbar } from '../components/Navbar';
 
 export const Home = () => {
 
@@ -48,14 +48,9 @@ export const Home = () => {
 
   return (
     <div className='w-full h-screen text-white flex flex-col'>
-      <header className='w-full h-28 bg-green-100 flex justify-around items-center'>
-        <img className="h-24 w-32" src="mainLogo.svg" alt="logo" />
-        <h1 className='font-Playfair text-2xl font-bold'>Cadastro de Time</h1>
-        <button className='bg-white hover:bg-green-200 transition-colors text-green-900 font-bold py-2 px-4 rounded'>Logout</button>
-      </header>
+      <Navbar title='Cadastro de time'/>
 
       <form className='w-full flex-1 flex flex-col justify-center items-center gap-5'>
-
 
         <div className='flex items-center gap-5'>
           <label className="cursor-pointer text-gray-600 text-lg font-bold">Nome da equipe:</label>

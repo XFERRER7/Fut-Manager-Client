@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import { Navbar } from '../components/Navbar'
 import { PlayerModal } from '../components/PlayerModal'
+import { Sidebar } from '../components/Sidebar'
 import { useApi } from '../service/api'
 import useUserStore from '../stores/AuthStore'
 import { IPlayer } from '../types/types'
@@ -42,10 +44,11 @@ export const Dashboard = () => {
 
   const api = useApi()
   const { idUser } = useUserStore()
+  const { token } = useUserStore()
 
   const getDataUser = async () => {
 
-    const res = await api.getDataUser(idUser)
+    const res = await api.getDataUser(idUser, token)
 
     return res
   }
@@ -104,6 +107,10 @@ export const Dashboard = () => {
 
   return (
     <div className='flex flex-col items-center gap-5'>
+      
+      <Navbar title='Dashboard'/>
+
+      <Sidebar />
 
       <h1>{dataUser?.teams.name}</h1>
       <img src={`http://localhost:3000/teamFiles/${dataUser?.teams.logo}`} alt="" />

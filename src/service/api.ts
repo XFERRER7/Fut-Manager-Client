@@ -127,10 +127,21 @@ export const useApi = () => {
       const data = await response.data
       return data
     },
-    getDataUser: async (userId: string) => {
+    getDataUser: async (userId: string, userToken: string) => {
 
+      if (!userId || !userToken) {
+        console.log("token: " + userToken)
+        return
+      }
       try {
-        const response = await api.get(`/get-user/${userId}`, optionsGet)
+        
+        const response = await api.get(`/get-user/${userId}`, {
+          method: 'GET',
+          headers: {
+            accept: 'application/json',
+            authorization: `Bearer ${userToken}`
+          }
+        })
         const data = await response.data
         return data
       }
