@@ -10,9 +10,10 @@ import { IPlayer } from '../types/types'
 import { Card } from '../components/Card'
 import { faFutbol } from '@fortawesome/free-solid-svg-icons'
 import { faBullseye } from '@fortawesome/free-solid-svg-icons'
-import { faPersonRunning  } from '@fortawesome/free-solid-svg-icons'
-import { faUserShield  } from '@fortawesome/free-solid-svg-icons'
-
+import { faPersonRunning } from '@fortawesome/free-solid-svg-icons'
+import { faUserShield } from '@fortawesome/free-solid-svg-icons'
+import { CardPlayer } from '../components/CardPlayer'
+import { PlayerModal } from '../components/PlayerModal'
 
 interface IDataUser {
   id: number
@@ -26,27 +27,10 @@ interface IDataUser {
   }
 }
 
-export interface ITeam {
-  id: string
-  position: string
-  age: number
-  name: string
-  birthDate: string
-  weight: number
-  height: number
-  nationality: string
-  salary: number
-  avatar: string
-  isInjured: boolean
-  createdAt: string
-  updatedAt: string
-  teamId: string
-}
-
 export const TesteDash = () => {
 
   const [dataUser, setDataUser] = useState<IDataUser | null>(null)
-  const [dataTeam, setDataTeam] = useState<ITeam[] | null>(null)
+  const [players, setPlayers] = useState<IPlayer[] | null>(null)
   const [dataPlayer, setDataPlayer] = useState<IPlayer | null>(null)
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [hasNotification, setHasNotification] = useState(false)
@@ -62,7 +46,7 @@ export const TesteDash = () => {
     return res
   }
 
-  const getDataTeam = async () => {
+  const getPlayers = async () => {
 
     const res = await api.getPlayerByTeamId(dataUser?.teams?.id)
 
@@ -101,11 +85,11 @@ export const TesteDash = () => {
 
   useEffect(() => {
 
-    getDataTeam()
+    getPlayers()
       .then(res => {
 
-        if (res.length === 0) return setDataTeam(null)
-        setDataTeam(res)
+        if (res.length === 0) return setPlayers(null)
+        setPlayers(res)
       })
       .catch(err => {
         console.log(err)
@@ -121,7 +105,7 @@ export const TesteDash = () => {
       <div className='bg-green-100 w-full h-full flex rounded-lg justify-between gap-2'>
 
         <Sidebar itemSelected='Meu Time' />
-        <main className='bg-[#EAF8F1] rounded-lg flex-1 h-full flex flex-col'>
+        <main className='bg-[#EAF8F1] rounded-lg flex-1 h-full flex flex-col px-1'>
 
           <header className='w-full h-24 border-b flex items-center justify-between px-5 text-gray-700'>
             <div className='flex gap-3 items-center'>
@@ -155,23 +139,52 @@ export const TesteDash = () => {
           </header>
 
 
-          <section className='w-full flex-1 rounded-lg flex flex-col'>
+          <section className='w-full flex-1 rounded-lg px-5 flex flex-col overflow-x-scroll'>
 
-            <div className='w-full h-48 flex flex-col px-5 gap-3'>
+            <div className='w-full h-48 flex flex-col gap-3'>
               <h1 className='font-bold text-lg text-gray-700 mt-5'>Dados gerais</h1>
 
               <div className='w-full flex items-center justify-between'>
 
-                <Card color='#377140' icon={faFutbol} percentage={'100'} statistic={'44'} title={'Total'}/>
-                <Card color='#C92114' icon={faBullseye} percentage={'45,45'} statistic={'20'} title={'Atacantes'}/>
-                <Card color='#228B22' icon={faPersonRunning} percentage={'36,36'} statistic={'16'} title={'Meias'}/>
-                <Card color='#1B2C6D' icon={faUserShield} percentage={'18,18'} statistic={'8'} title={'Defensores'}/>
+                <Card color='#377140' icon={faFutbol} percentage={'100'} statistic={'44'} title={'Total'} />
+                <Card color='#C92114' icon={faBullseye} percentage={'45,45'} statistic={'20'} title={'Atacantes'} />
+                <Card color='#228B22' icon={faPersonRunning} percentage={'36,36'} statistic={'16'} title={'Meias'} />
+                <Card color='#1B2C6D' icon={faUserShield} percentage={'18,18'} statistic={'8'} title={'Defensores'} />
+
               </div>
 
             </div>
 
-            <div className='w-full flex-1'>
+            <div className='w-full flex-1 flex flex-col'>
+              <div className='mt-5'>
+                <h1 className='font-bold text-lg text-gray-700 mt-5'>Jogadores</h1>
+              </div>
+              <div className='flex-1 flex flex-col items-center gap-3 mt-3'>
 
+                {
+                  players !== null ? players.map((item: IPlayer) =>
+                    <CardPlayer 
+                    key={item.id}
+                    age={item.age}
+                    avatar={item.avatar}
+                    birthDate={item.birthDate}
+                    height={item.height}
+                    id={item.id}
+                    isInjured={item.isInjured}
+                    name={item.name}
+                    nationality={item.nationality}
+                    position={item.position}
+                    salary={item.salary}
+                    weight={item.weight}
+                    onClick={() => handleClickPlayer(item.id)}
+                    
+                    />
+                  )
+                    :
+                    <span className='text-gray-600 font-bold mt-8'> Sem jogadores registrados</span>
+                }
+
+              </div>
             </div>
 
           </section>
@@ -179,6 +192,26 @@ export const TesteDash = () => {
         </main>
 
       </div>
-    </div>
+
+      {
+        modalIsOpen && dataPlayer !== null ?
+        <PlayerModal 
+            age={dataPlayer?.age}
+            name={dataPlayer?.name}
+            birthDate={dataPlayer?.birthDate}
+            weight={dataPlayer?.weight}
+            height={dataPlayer?.height}
+            avatar={dataPlayer?.avatar}
+            isInjured={dataPlayer?.isInjured}
+            id={dataPlayer?.id}
+            nationality={dataPlayer.nationality}
+            position={dataPlayer?.position}
+            salary={dataPlayer?.salary}     
+            setModalIsOpen={setModalIsOpen}  
+      />
+        : null
+      }
+
+    </div >
   )
 }

@@ -15,10 +15,10 @@ export interface IPlayer {
   age: number
   name: string
   birthDate: string
-  weight: number
-  height: number
+  weight: number | string
+  height: number | string
   nationality: string
-  salary: number
+  salary: number | string
   avatar: string
   isInjured: boolean
 }
