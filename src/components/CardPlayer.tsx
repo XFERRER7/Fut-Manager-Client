@@ -1,8 +1,9 @@
 import React from 'react'
 import { IPlayer } from '../types/types'
+import { positions } from '../utils/positions'
 
 interface ICardPlayerProps extends IPlayer {
-  onClick?: (id: string) => void | undefined
+  onClick?: (id: string) => Promise<void>
 }
 
 export const CardPlayer = ({
@@ -18,13 +19,9 @@ export const CardPlayer = ({
 
       <div style={{
 
-        backgroundColor: position === 'Goleiro' ? '#1B2C6D'
-          : position === 'Defensor' ? '#1B2C6D'
-            : position === 'Atacante' ? '#C92114'
-              : position === 'Ponta esquerda' ? '#C92114'
-                : position === 'Ponta direita' ? '#C92114'
-                  : position === 'Meio campo' ? '#228B22'
-                    : '#ffffff'
+        backgroundColor: positions.map(item => item.name).includes(position) ?
+          positions.filter(item => item.name === position)[0].color :
+          '#000000'
 
 
 

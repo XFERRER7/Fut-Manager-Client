@@ -14,6 +14,8 @@ import { faPersonRunning } from '@fortawesome/free-solid-svg-icons'
 import { faUserShield } from '@fortawesome/free-solid-svg-icons'
 import { CardPlayer } from '../components/CardPlayer'
 import { PlayerModal } from '../components/PlayerModal'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface IDataUser {
   id: number
@@ -29,16 +31,41 @@ interface IDataUser {
 
 export const TesteDash = () => {
 
+
+  //States
   const [dataUser, setDataUser] = useState<IDataUser | null>(null)
   const [players, setPlayers] = useState<IPlayer[] | null>(null)
   const [dataPlayer, setDataPlayer] = useState<IPlayer | null>(null)
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [hasNotification, setHasNotification] = useState(false)
+  const [status, setStatus] = useState('')
+  const [statistics, setStatistics] = useState({
+    total: {
+      percentage: 0,
+      amount: 0
+    },
+    forwards: {
+      percentage: 0,
+      amount: 0
+    },
+    midfielders: {
+      percentage: 0,
+      amount: 0
+    },
+    defenders: {
+      percentage: 0,
+      amount: 0
+    },
+  })
 
-  const api = useApi()
+
+  //Variables and constants
   const { idUser } = useUserStore()
   const { token } = useUserStore()
+  const api = useApi()
 
+
+  //Functions
   const getDataUser = async () => {
 
     const res = await api.getDataUser(idUser, token)
@@ -50,25 +77,27 @@ export const TesteDash = () => {
 
     const res = await api.getPlayerByTeamId(dataUser?.teams?.id)
 
-    return res
+    if (res.length === 0) return setPlayers(null)
+
+    setPlayers(res)
 
   }
 
-  const handleClickPlayer = (playerId: string) => {
+  const handleClickPlayer = async (playerId: string) => {
 
-    setModalIsOpen(!modalIsOpen)
-
-    if (modalIsOpen) return
-
-    api.getPlayerById(playerId)
-      .then(res => {
-        setDataPlayer(res)
+    await api.getPlayerById(playerId)
+      .then((res) => {
+        setDataPlayer(res);
       })
-      .catch(err => {
-        console.log(err)
+      .catch((err) => {
+        console.log(err);
       })
-  }
 
+    setModalIsOpen(true);
+  };
+
+
+  //Side effects
   useEffect(() => {
 
     getDataUser()
@@ -80,25 +109,83 @@ export const TesteDash = () => {
       })
 
 
-
   }, [])
 
   useEffect(() => {
 
     getPlayers()
-      .then(res => {
 
-        if (res.length === 0) return setPlayers(null)
-        setPlayers(res)
-      })
-      .catch(err => {
-        console.log(err)
-      }
-      )
 
   }, [dataUser])
 
 
+  useEffect(() => {
+
+  }, [])
+
+  useEffect(() => {
+
+    const qtd = players?.length
+
+    const forwards = players?.filter(player =>
+      player.position === 'Ponta esquerda' ||
+      player.position == 'Atacante' ||
+      player.position == 'Ponta direita'
+    ).length
+
+    const midfielders = players?.filter(player =>
+      player.position === 'Meio campo' ||
+      player.position == 'Meia atacante' ||
+      player.position == 'Volante'
+    ).length
+
+    const defenders = players?.filter(player =>
+      player.position === 'Zagueiro' ||
+      player.position == 'Lateral esquerdo' ||
+      player.position == 'Lateral direito' ||
+      player.position == 'Goleiro'
+    ).length
+
+
+    setStatistics({
+      total: {
+        percentage: 100,
+        amount: qtd ? qtd : 0
+      },
+      forwards: {
+        percentage: forwards ? (forwards / qtd!) * 100 : 0,
+        amount: forwards ? forwards : 0
+      },
+      midfielders: {
+        percentage: midfielders ? (midfielders / qtd!) * 100 : 0,
+        amount: midfielders ? midfielders : 0
+      },
+      defenders: {
+        percentage: defenders ? (defenders / qtd!) * 100 : 0,
+        amount: defenders ? defenders : 0
+      }
+    })
+
+  }, [players])
+
+  useEffect(() => {
+
+    if(status === 'success') {
+      toast.success('Jogador atualizado com sucesso!', {
+        closeOnClick: true,
+        pauseOnHover: true,
+      });
+      setStatus('')
+    }
+    else if(status === 'error') {
+      toast.error('Erro ao atualizar jogador!', {
+        closeOnClick: true,
+        pauseOnHover: true,
+      });
+      setStatus('')
+    }
+
+  } , [status])
 
   return (
     <div className='bg-green-100 w-full h-screen p-5 font-sans'>
@@ -146,10 +233,17 @@ export const TesteDash = () => {
 
               <div className='w-full flex items-center justify-between'>
 
-                <Card color='#377140' icon={faFutbol} percentage={'100'} statistic={'44'} title={'Total'} />
-                <Card color='#C92114' icon={faBullseye} percentage={'45,45'} statistic={'20'} title={'Atacantes'} />
-                <Card color='#228B22' icon={faPersonRunning} percentage={'36,36'} statistic={'16'} title={'Meias'} />
-                <Card color='#1B2C6D' icon={faUserShield} percentage={'18,18'} statistic={'8'} title={'Defensores'} />
+                <Card color='#377140' icon={faFutbol}
+                  percentage={statistics.total.percentage.toString()} statistic={statistics.total.amount} title={'Total'} />
+
+                <Card color='#C92114' icon={faBullseye}
+                  percentage={statistics.forwards.percentage.toFixed(2)} statistic={statistics.forwards.amount} title={'Atacantes'} />
+
+                <Card color='#228B22' icon={faPersonRunning}
+                  percentage={statistics.midfielders.percentage.toFixed(2)} statistic={statistics.midfielders.amount} title={'Meias'} />
+
+                <Card color='#1B2C6D' icon={faUserShield}
+                  percentage={statistics.defenders.percentage.toFixed(2)} statistic={statistics.defenders.amount} title={'Defensores'} />
 
               </div>
 
@@ -163,21 +257,21 @@ export const TesteDash = () => {
 
                 {
                   players !== null ? players.map((item: IPlayer) =>
-                    <CardPlayer 
-                    key={item.id}
-                    age={item.age}
-                    avatar={item.avatar}
-                    birthDate={item.birthDate}
-                    height={item.height}
-                    id={item.id}
-                    isInjured={item.isInjured}
-                    name={item.name}
-                    nationality={item.nationality}
-                    position={item.position}
-                    salary={item.salary}
-                    weight={item.weight}
-                    onClick={() => handleClickPlayer(item.id)}
-                    
+                    <CardPlayer
+                      key={item.id}
+                      age={item.age}
+                      avatar={item.avatar}
+                      birthDate={item.birthDate}
+                      height={item.height}
+                      id={item.id}
+                      isInjured={item.isInjured}
+                      name={item.name}
+                      nationality={item.nationality}
+                      position={item.position}
+                      salary={item.salary}
+                      weight={item.weight}
+                      onClick={() => handleClickPlayer(item.id)}
+
                     />
                   )
                     :
@@ -195,7 +289,7 @@ export const TesteDash = () => {
 
       {
         modalIsOpen && dataPlayer !== null ?
-        <PlayerModal 
+          <PlayerModal
             age={dataPlayer?.age}
             name={dataPlayer?.name}
             birthDate={dataPlayer?.birthDate}
@@ -206,12 +300,14 @@ export const TesteDash = () => {
             id={dataPlayer?.id}
             nationality={dataPlayer.nationality}
             position={dataPlayer?.position}
-            salary={dataPlayer?.salary}     
-            setModalIsOpen={setModalIsOpen}  
-      />
-        : null
+            salary={dataPlayer?.salary}
+            setModalIsOpen={setModalIsOpen}
+            getPlayers={getPlayers}
+            setStatus={setStatus}
+          />
+          : null
       }
-
+      <ToastContainer />
     </div >
   )
 }

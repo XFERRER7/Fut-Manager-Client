@@ -134,7 +134,7 @@ export const useApi = () => {
         return
       }
       try {
-        
+
         const response = await api.get(`/get-user/${userId}`, {
           method: 'GET',
           headers: {
@@ -160,7 +160,14 @@ export const useApi = () => {
         console.log(error.response.data)
       }
 
-    }
+    },
+    updatePlayer: async (dataPlayer: any) => {
+
+      const response = await api.patch(`/update-player`, dataPlayer, optionsPatch)
+      const data = await response.data
+      return data
+
+    },
 
   }
 

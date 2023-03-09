@@ -1,12 +1,11 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFutbol } from '@fortawesome/free-solid-svg-icons'
 
 interface ICardProps {
   color: string
   icon: any
   percentage: string
   title: string
-  statistic: string
+  statistic: number
 }
 
 export const Card = ({color, icon, percentage, statistic, title}: ICardProps) => {
