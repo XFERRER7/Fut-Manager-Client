@@ -3,7 +3,6 @@ import { Dashboard } from './pages/Dashboard';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { SignUp } from './pages/SignUp';
-import { TesteDash } from './pages/TesteDash';
 
 export const AppRoutes = () => {
 
@@ -14,7 +13,7 @@ export const AppRoutes = () => {
         <Route path='/signup' element={<SignUp />} />
         <Route path='/home' element={<Home />} />
         <Route path='/dashboard' element={<Dashboard />} />
-        <Route path='/test-dashboard' element={<TesteDash />} />
+        <Route path='/test-dashboard' element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   )

@@ -37,7 +37,7 @@ export const Login = () => {
         const resTeam = await api.getDataUser(res.idUser, res.token)
 
         if(resTeam.teams) {
-          nav('/test-dashboard')
+          nav('/dashboard')
         }else {
           nav('/home')
         }

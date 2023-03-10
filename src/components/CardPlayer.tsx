@@ -13,7 +13,7 @@ export const CardPlayer = ({
 
   return (
     <div
-      className='w-full px-2 relative bg-white cursor-pointer rounded shadow-custom h-20 flex items-center justify-between'
+      className='w-full animate-cards px-2 relative bg-white cursor-pointer rounded shadow-custom h-20 flex items-center justify-between'
       onClick={() => onClick && onClick(id)}
     >
 
@@ -21,13 +21,7 @@ export const CardPlayer = ({
 
         backgroundColor: positions.map(item => item.name).includes(position) ?
           positions.filter(item => item.name === position)[0].color :
-          '#000000'
-
-
-
-
-
-
+          '#ffffff'
 
       }} className='h-full w-5 rounded-tl rounded-bl bg-red-600 absolute left-0' />
 

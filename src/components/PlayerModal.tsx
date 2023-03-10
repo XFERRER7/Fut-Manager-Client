@@ -1,17 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useApi } from '../service/api'
 import { IPlayer } from '../types/types'
 import { positions } from '../utils/positions'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 
 interface IPlayerModalProps extends IPlayer {
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>
   getPlayers: () => void
   setStatus: React.Dispatch<React.SetStateAction<string>>
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const PlayerModal = ({ age, avatar,
   birthDate, height, id, isInjured, name,
-  nationality, position, salary, weight, setModalIsOpen, getPlayers, setStatus }: IPlayerModalProps) => {
+  nationality, position, salary, weight, setModalIsOpen, getPlayers, setStatus, setIsLoading }: IPlayerModalProps) => {
 
   const [player, setPlayer] = useState<IPlayer>({
     age,
@@ -26,6 +29,9 @@ export const PlayerModal = ({ age, avatar,
     salary,
     weight
   })
+
+  const [btnIsDisabled, setBtnIsDisabled] = useState(true)
+  const inputName = useRef<HTMLInputElement>(null)
 
   const [prevPlayer,] = useState<IPlayer>(player);
   const api = useApi()
@@ -52,7 +58,6 @@ export const PlayerModal = ({ age, avatar,
         maximumFractionDigits,
       }
     )
-
   }
 
   const handleUpdate = async () => {
@@ -88,7 +93,7 @@ export const PlayerModal = ({ age, avatar,
       data
     }
 
-    console.log(dataPlayer.data)
+    console.log(dataPlayer)
 
     if (Object.keys(data).length > 0) {
 
@@ -110,14 +115,40 @@ export const PlayerModal = ({ age, avatar,
   }
 
 
+  useEffect(() => {
+    setIsLoading(false)
+  }, [])
+
+  useEffect(() => {
+    if (btnIsDisabled === false) {
+      inputName.current?.focus()
+    }
+  }, [btnIsDisabled])
+
   return (
 
     <div className="fixed inset-0 z-40 bg-[#0000007a] flex justify-center items-center">
-      <div className="w-3/4 h-3/4 bg-white relative z-50 rounded-md flex flex-col items-center gap-5 py-5 px-8">
+      <div className="w-3/4 h-3/4 bg-white relative z-50 rounded-md flex flex-col items-center gap-5 py-5 px-8 animate-modal">
 
         <img className='w-28 h-28 rounded-full object-cover object-center'
           src={`http://localhost:3000/playerFiles/${avatar}`} alt="imagem do jogador" />
-        <h1 className='font-bold text-2xl text-gray-700'>{name}</h1>
+        <div className='flex items-center gap-3'>
+        <FontAwesomeIcon onClick={() => {
+            setBtnIsDisabled(!btnIsDisabled)
+          }} icon={faPenToSquare} className='text-gray-500' />
+          <input
+            className='font-bold text-2xl text-center text-gray-700'
+            value={player.name}
+            ref={inputName}
+            disabled={btnIsDisabled}
+            onChange={(e) => {
+              setPlayer(prev => {
+                return { ...prev, name: e.target.value }
+              })
+            }}
+          />
+          
+        </div>
 
         <div className='flex-1 w-full flex flex-col gap-5'>
           <div className="w-full flex justify-around items center">
@@ -130,7 +161,7 @@ export const PlayerModal = ({ age, avatar,
                   return { ...prev, height: e.target.value }
                 })} />
             </div>
-            
+
             <div className='flex flex-col gap-1'>
               <label htmlFor="" className='text-gray-500'>Peso</label>
               <input className='p-3 w-56 h-10 border-2 border-gray-400 rounded-md'
@@ -185,7 +216,7 @@ export const PlayerModal = ({ age, avatar,
             <div className='flex flex-col gap-1'>
               <label htmlFor="" className='text-gray-500'>Posição</label>
               <select className='px-3 w-56 h-10 border-2 border-gray-400 rounded-md'
-               value={player.position} onChange={(e) => setPlayer(prev => {
+                value={player.position} onChange={(e) => setPlayer(prev => {
 
                   return { ...prev, position: e.target.value }
                 })}>
@@ -194,7 +225,7 @@ export const PlayerModal = ({ age, avatar,
                     return <option key={position.name} value={position.name}>{position.name}</option>
                   })
                 }
-                </select>
+              </select>
             </div>
 
             <div className='flex flex-col gap-3 w-56 h-10 items-center'>
@@ -248,7 +279,3 @@ export const PlayerModal = ({ age, avatar,
     </div>
   )
 }
-
-// <input type="text" className='w-56 h-10 border rounded' value={age}/>
-//             <input type="text" className='w-32 h-10 border rounded' value={isInjured ? 'Lesionado: Sim' : 'Lesionado: Não'}/>
-//             <input type="text" className='w-32 h-10 border rounded' value={isInjured ? 'Lesionado: Sim' : 'Lesionado: Não'}/>

@@ -10,7 +10,7 @@ interface ICardProps {
 
 export const Card = ({color, icon, percentage, statistic, title}: ICardProps) => {
   return (
-    <div className='bg-white rounded-md shadow-custom w-56 h-36 px-5 py-3 flex flex-col gap-3'>
+    <div className='bg-white animate-cards rounded-md shadow-custom w-56 h-36 px-5 py-3 flex flex-col gap-3'>
       <header className='w-full h-10 flex items-center justify-between'>
         <FontAwesomeIcon icon={icon} size='xl' color={color}/>
         <div style={{

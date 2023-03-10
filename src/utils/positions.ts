@@ -20,7 +20,7 @@ export const positions = [
     color: '#228B22'
   },
   {
-    name: 'Meio Campo',
+    name: 'Meio campo',
     color: '#228B22'
   },
   {

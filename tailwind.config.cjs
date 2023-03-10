@@ -20,6 +20,29 @@ module.exports = {
         //create a new box shadow
         custom: "0 10px 22px 0px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
       },
+      //crie uma animação para quando o modal aparecer
+      keyframes: {
+        modal: {
+          "0%": {
+            transform: "translateY(-300px)"
+          },
+          "100%": {
+            transform: "translateY(0)"
+          }
+        },
+        cards: {
+          "0%": {
+            transform: "translateX(-150px)"
+          },
+          "100%": {
+            transform: "translateX(0)"
+          }
+        }
+      },
+      animation: {
+        modal: "modal 0.5s ease-out",
+        cards: "cards 0.3s ease-out"
+      }
     },
   },
   plugins: [],

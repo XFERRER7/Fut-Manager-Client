@@ -5,6 +5,7 @@ import { ISidebarItem } from "../types/types";
 import { ItemSidebar } from "./ItemSidebar";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons"
 import useUserStore from "../stores/AuthStore";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -18,6 +19,8 @@ export const Sidebar = ({ itemSelected }: ISidebarProps) => {
 
   const { name } = useUserStore()
   const { email } = useUserStore()
+  const { removeUserData } = useUserStore()
+  const nav = useNavigate()
 
   useEffect(() => {
 
@@ -46,9 +49,12 @@ export const Sidebar = ({ itemSelected }: ISidebarProps) => {
       <div className="flex font-Playfair w-full flex-col mt-10 
       items-center justify-between px-10 cursor-pointer gap-2">
 
-        <div className="w-full flex items-center gap-5 p-2 rounded">
+        <div className="w-full flex items-center gap-5 p-2 hover:bg-green-800 transition-colors rounded">
           <FontAwesomeIcon icon={faSignOutAlt} color={'white'} size={'lg'} />
-          <span className="font-bold">Logout</span>
+          <span onClick={() => {
+            removeUserData()
+            nav('/')
+          }} className="font-bold ">Logout</span>
         </div>
 
         <div className="flex w-full gap-5">
