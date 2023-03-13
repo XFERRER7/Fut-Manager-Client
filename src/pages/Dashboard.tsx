@@ -19,6 +19,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import ReactLoading from 'react-loading';
 import { faPersonCirclePlus } from '@fortawesome/free-solid-svg-icons'
 import { SearchBar } from '../components/SearchBar'
+import { useNavigate } from 'react-router-dom'
 
 interface IDataUser {
   id: number
@@ -68,6 +69,7 @@ export const Dashboard = () => {
   const { idUser } = useUserStore()
   const { token } = useUserStore()
   const api = useApi()
+  const nav = useNavigate()
 
 
   //Functions
@@ -199,7 +201,7 @@ export const Dashboard = () => {
       <div className='bg-green-100 w-full h-full flex rounded-lg justify-between gap-2'>
 
         <Sidebar itemSelected='Meu Time' />
-        <main className='bg-[#EAF8F1] rounded-lg flex-1 h-full flex flex-col px-1 relative'>
+        <main className='bg-primary-100 rounded-lg flex-1 h-full flex flex-col px-1 relative'>
 
           <header className='w-full h-24 border-b flex items-center justify-between px-5 text-gray-700'>
             <div className='flex gap-3 items-center'>
@@ -253,7 +255,7 @@ export const Dashboard = () => {
                 <div className='flex gap-5 mt-5 items-center'>
                   <button className='bg-green-700 text-white h-9 py-1 px-2 rounded'>
                     <FontAwesomeIcon icon={faPersonCirclePlus} />
-                    <span className="ml-2 font-semibold">Adicionar jogador</span>
+                    <span className="ml-2 font-semibold" onClick={() => nav('/add-player')}>Adicionar jogador</span>
                   </button>
                   <select
                     name="pos"

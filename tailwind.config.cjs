@@ -9,7 +9,16 @@ module.exports = {
       colors: {
         green: {
           100: "#377140",
+        },
+        primary: {
+          100: "#EAF8F1",
         }
+      },
+      backgroundImage: {
+        slider1: "url('slider1.jpg')",
+        slider2: "url('slider2.jpg')",
+        slider3: "url('slider3.jpg')",
+        slider4: "url('slider4.jpg')",
       },
       fontFamily: {
         //create a new font family
