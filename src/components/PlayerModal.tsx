@@ -4,6 +4,7 @@ import { IPlayer } from '../types/types'
 import { positions } from '../utils/positions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
+import { maskDate } from '../utils/Functions'
 
 interface IPlayerModalProps extends IPlayer {
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -38,15 +39,6 @@ export const PlayerModal = ({ age, avatar,
 
   const closeModal = () => {
     setModalIsOpen(false)
-  }
-
-  const maskDate = (value: string) => {
-    return value
-      .replace(/\D/g, '')
-      .replace(/(\d{2})(\d)/, '$1/$2')
-      .replace(/(\d{2})(\d)/, '$1/$2')
-      .replace(/(\d{4})(\d{1,2})/, '$1/$2')
-      .slice(0, 10)
   }
 
   const formatValue = (value: string | number, minimumFractionDigits: number, maximumFractionDigits: number) => {

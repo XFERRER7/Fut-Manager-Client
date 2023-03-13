@@ -1,5 +1,11 @@
 import { SwiperProps, SwiperSlide } from "swiper/react"
+import { InputText } from "../Elements/InputText"
 import { Slider } from "../components/Slider"
+import { useState } from "react"
+import { IPlayer } from "../types/types"
+import { formatValue, maskDate } from "../utils/Functions"
+import { Select } from "../Elements/Select"
+import { positions } from "../utils/positions"
 
 
 export const PlayerRegistration = () => {
@@ -11,6 +17,21 @@ export const PlayerRegistration = () => {
       clickable: true
     },
   }
+
+  const [player, setPlayer] = useState<IPlayer>({
+    id: '',
+    name: '',
+    age: 0,
+    position: '',
+    height: '',
+    weight: '',
+    avatar: '',
+    salary: '',
+    birthDate: '',
+    isInjured: false,
+    nationality: '',
+  })
+
 
   return (
     <div className="flex h-screen w-screen">
@@ -91,7 +112,97 @@ export const PlayerRegistration = () => {
 
       </div>
 
-      <div className="bg-blue-200 flex-1 h-full">
+      <div className="bg-primary-100 flex-1 h-full flex items-center justify-center px-14 py-20">
+
+        <form className="w-full h-full flex flex-col shadow-custom p-7 text-gray-600">
+
+          <h1 className="text-2xl font-semibold text-center">Registro de jogador</h1>
+
+          <div className="w-full flex-1 flex flex-col gap-5 mt-5">
+
+            <div className="flex items-center justify-around">
+
+              <InputText
+                label="Nome"
+                placeholder="Informe o nome"
+                value={player.name}
+                onChange={(e) => {
+                  setPlayer((prev) => {
+                    return {
+                      ...prev,
+                      name: e.target.value
+                    }
+                  })
+                }}
+                formatText={(text) => {
+                  return text.toString()[0].toUpperCase() + text.toString().slice(1)
+                }}
+              />
+
+              <InputText
+                label="Data de nascimento"
+                placeholder="DD/MM/AAAA"
+                formatText={(text) => {
+                  return maskDate(text.toString())
+                }}
+                value={player.birthDate}
+                onChange={(e) => {
+                  setPlayer((prev) => {
+                    return {
+                      ...prev,
+                      birthDate: e.target.value
+                    }
+                  })
+                }}
+              />
+
+
+            </div>
+
+            <div className="flex items-center justify-around">
+
+              <Select
+                label="Posição"
+                value={player.position}
+                options={positions.map((position) => {
+                  return {
+                    value: position.name,
+                    label: position.name
+                  }}
+                )}
+                onChange={(e) => {
+                  setPlayer((prev) => {
+                    return {
+                      ...prev,
+                      position: e.target.value
+                    }
+                  })
+                }}
+              />
+
+              <InputText 
+              label="Altura"
+              placeholder="Informe a altura"
+              value={player.height}
+              onChange={(e) => {
+                setPlayer((prev) => {
+                  return {
+                    ...prev,
+                    height: e.target.value
+                  }
+                })
+              }}
+              formatText={(text) => {
+                return formatValue(text, 2, 2)
+              }}
+
+              />
+
+            </div>
+
+          </div>
+
+        </form>
 
       </div>
 
